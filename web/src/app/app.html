@@ -1,0 +1,27 @@
+<main>
+  <h1>Todo App {{ newTitle() }}</h1>
+
+  <form (submit)="add($event)">
+    <input #title placeholder="Stop thinking, start doing"
+      maxlength="200" aria-label="New todo"
+      [value]="newTitle()"
+      (input)="newTitle.set(title.value)" />
+    
+    <button type="submit">Add</button>
+  </form>
+
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+
+  <ul>
+    @for (todo of todos(); track todo.id) {
+      <li>
+        <span>{{todo.title}}</span>
+        <button type="button" (click)="remove(todo)" aria-label="Remove">X</button>
+      </li>
+    } @empty {
+    <li class="empty">So blank...</li>
+    }
+  </ul>
+</main>
