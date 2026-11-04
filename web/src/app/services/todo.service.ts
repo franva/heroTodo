@@ -19,4 +19,11 @@ export class TodoService {
     remove(id: string): Observable<void> {
         return this.http.delete<void>(`${this.url}/${id}`);
     }
+
+    update(todo: Todo): Observable<Todo> {
+        return this.http.put<Todo>(`${this.url}/${todo.id}`, {
+            title: todo.title,
+            isCompleted: todo.isCompleted
+        });
+    }
 }

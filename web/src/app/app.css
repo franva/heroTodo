@@ -10,11 +10,6 @@ form {
   gap: 0.5rem;
 }
 
-input {
-  flex: 1;
-  padding: 0.5rem;
-}
-
 ul {
   list-style: none;
   padding: 0;
@@ -33,6 +28,11 @@ li span {
   overflow-wrap: anywhere;
 }
 
+/* .done {
+  color: #777;
+  text-decoration: line-through;
+} */
+
 .empty {
   color: #777;
 }
@@ -40,3 +40,18 @@ li span {
 .error {
   color: #b00020;
 }
+/* 
+.todoRow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+} */
+/* .todoRow input[type="checkbox"] {
+  text-align: right !important;
+  border: 1px solid #0000FF;
+}
+
+.todoRow span {
+  flex: 1;
+  text-align: left;
+} */

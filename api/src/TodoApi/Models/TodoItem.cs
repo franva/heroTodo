@@ -1,3 +1,3 @@
 namespace TodoApi.Models;
 
-public record TodoItem(Guid Id, string Title);
+public record TodoItem(Guid Id, string Title, bool IsCompleted = false);

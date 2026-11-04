@@ -9,12 +9,28 @@ public class InMemoryTodoStore: ITodoStore
     public TodoItem Add(string title)
     {
         var item = new TodoItem(Guid.NewGuid(), title.Trim());
+        // TODO: check whether the title is duplicated with existing open todo items.
         lock(_lock)
         {
             _items.Add(item);
         }
         
         return item;
+    }
+
+    public TodoItem? Update(Guid Id, string title, bool IsCompleted)
+    {
+        lock(_lock)
+        {
+            var index = _items.FindIndex(i => i.Id == Id);
+            if( index < 0)
+            {
+                return null;
+            }
+            var updated = _items[index] with {Title = title, IsCompleted = IsCompleted};
+            _items[index] = updated;
+            return updated;
+        }
     }
 
     public IReadOnlyList<TodoItem> GetAll()
@@ -30,6 +46,14 @@ public class InMemoryTodoStore: ITodoStore
         lock(_lock)
         {
             return _items.RemoveAll(i => i.Id == Id) > 0;
+        }
+    }
+
+    public TodoItem? Get(Guid Id)
+    {
+        lock(_items)
+        {
+            return _items.FirstOrDefault(i => i.Id == Id);
         }
     }
 }

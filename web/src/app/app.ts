@@ -1,9 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { TodoService } from './services/todo.service';
 import { Todo } from './models/todo';
+import { TodoItemRow } from './components/todo-item-row/todo-item-row';
 
 @Component({
-  imports: [],
+  imports: [TodoItemRow],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
@@ -15,6 +16,9 @@ export class App {
   protected readonly todos = signal<Todo[]>([]);
   protected readonly newTitle = signal('');
   protected readonly error = signal('');
+
+  protected readonly openTodos = computed(() => this.todos().filter(todo => !todo.isCompleted));
+  protected readonly completedTodos = computed(() => this.todos().filter(todo => todo.isCompleted));
   
   ngOnInit() {
     this.todoService.getAll().subscribe({
@@ -44,6 +48,16 @@ export class App {
         this.todos.update(todos => todos.filter(i => i.id !== todo.id));
       },
       error: () => this.error.set("Failed to remove todo. Check back later.")
+    });
+  }
+
+  protected update(todo: Todo, changes: Partial<Todo>) {
+    this.todoService.update({...todo, ...changes}).subscribe({
+      next: (updatedTodo) => {
+        this.todos.update(todos => todos.map(i => i.id === updatedTodo.id ? updatedTodo : i));
+        this.error.set('');
+      },
+      error: () => this.error.set("Failed to update todo. Check back later.")
     });
   }
 }

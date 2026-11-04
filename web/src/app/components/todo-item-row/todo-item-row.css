@@ -1,0 +1,10 @@
+span,
+input[aria-label='Edit todo'] {
+      flex: 1;
+      overflow-wrap: anywhere;
+}
+
+.done {
+      color: #777;
+      text-decoration: line-through;
+}

@@ -60,4 +60,15 @@ public class TodosApiTests(WebApplicationFactory<Program> factory) : IClassFixtu
 
         Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
     }
+
+    
+    [Fact]
+    public async Task Post_ReturnsLocationThatCanBeFetched()
+    {
+        var client = TestClient();
+        var response = await client.PostAsJsonAsync(apiBase, new {title = "test"});
+        var fetched = await client.GetAsync(response.Headers.Location);
+
+        Assert.Equal(HttpStatusCode.OK, fetched.StatusCode);
+    }
 }

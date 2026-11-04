@@ -1,0 +1,15 @@
+<input type="checkbox" [checked]="todo().isCompleted"
+    (change)="toggled.emit()"
+    [attr.aria-label]="todo().title" />
+
+@if(editing()) {
+    <input #edit aria-label="Edit todo" maxlength="200"
+        [value]="todo().title"
+        (keydown.enter)="save(edit.value)"
+        (keydown.escape)="editing.set(false)"
+        (blur)="save(edit.value)" />
+} @else {
+    <span [class.done]="todo().isCompleted" (dblclick)="editing.set(true)">{{todo().title}}</span>
+}
+
+<button (click)="deleted.emit()" aria-label="Delete">X</button>
