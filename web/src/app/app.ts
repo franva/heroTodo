@@ -2,6 +2,7 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { TodoService } from './services/todo.service';
 import { Todo } from './models/todo';
 import { TodoItemRow } from './components/todo-item-row/todo-item-row';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type Filter = 'all' | 'active' | 'completed';
 
@@ -58,7 +59,7 @@ export class App {
         this.newTitle.set('');
         this.error.set('');
       },
-      error: () => this.error.set("Failed to add todo. Check back later.")
+      error: (e: HttpErrorResponse) => this.error.set(e.status ===409 ? "This todo already exists." : "Failed to add todo. Check back later.")
     });
   }
 

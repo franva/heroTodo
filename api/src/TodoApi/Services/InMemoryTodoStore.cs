@@ -6,16 +6,21 @@ public class InMemoryTodoStore: ITodoStore
     private readonly List<TodoItem> _items = [];
     private readonly Lock _lock = new();
 
-    public TodoItem Add(string title)
+    public TodoItem? Add(string title)
     {
-        var item = new TodoItem(Guid.NewGuid(), title.Trim());
-        // TODO: check whether the title is duplicated with existing open todo items.
+        var trimmed = title.Trim();
+
         lock(_lock)
         {
+            if(_items.Any(i => string.Equals(i.Title, trimmed, StringComparison.OrdinalIgnoreCase)))
+            {
+                return null;
+            }
+
+            var item = new TodoItem(Guid.NewGuid(), trimmed);
             _items.Add(item);
+            return item;
         }
-        
-        return item;
     }
 
     public TodoItem? Update(Guid Id, string title, bool IsCompleted)

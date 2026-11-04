@@ -21,6 +21,10 @@ namespace TodoApi.Controllers
         public ActionResult<TodoItem> Create(CreateTodoRequest request)
         {
             var item = store.Add(request.Title);
+            if(item is null)
+            {
+                return Conflict(new ProblemDetails {Title = "Duplicated todo", Status = StatusCodes.Status409Conflict});
+            }
             return Created($"/api/todos/{item.Id}", item);
         }
 

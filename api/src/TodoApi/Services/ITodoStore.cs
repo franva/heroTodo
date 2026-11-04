@@ -4,7 +4,7 @@ namespace TodoApi.Services;
 public interface ITodoStore
 {
     IReadOnlyList<TodoItem> GetAll(bool? completed=null);
-    TodoItem Add(string title);
+    TodoItem? Add(string title); // null when title already exists
     bool Remove(Guid Id);
 
     TodoItem? Get(Guid Id);
