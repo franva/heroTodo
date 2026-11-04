@@ -12,15 +12,17 @@ namespace TodoApi.Controllers
     {
 
         [HttpGet]
-        public IReadOnlyList<TodoItem> GetAll([FromQuery] bool? completed) => store.GetAll(completed);
+        public async Task<IReadOnlyList<TodoItem>> GetAll([FromQuery] bool? completed, CancellationToken token) => 
+            await store.GetAll(completed, token);
 
         [HttpGet("{id:guid}")]
-        public ActionResult<TodoItem?> Get(Guid id) => store.Get(id) is {} item? item : NotFound();
+        public async Task<ActionResult<TodoItem?>> Get(Guid id, CancellationToken ct) => 
+            await store.Get(id, ct) is {} item? item : NotFound();
 
         [HttpPost]
-        public ActionResult<TodoItem> Create(CreateTodoRequest request)
+        public async Task<ActionResult<TodoItem>> Create(CreateTodoRequest request, CancellationToken ct)
         {
-            var item = store.Add(request.Title);
+            var item = store.Add(request.Title, ct);
             if(item is null)
             {
                 return Conflict(new ProblemDetails {Title = "Duplicated todo", Status = StatusCodes.Status409Conflict});
@@ -29,12 +31,13 @@ namespace TodoApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        public ActionResult Delete(Guid id) => store.Remove(id) ? NoContent() : NotFound();
+        public async Task<ActionResult> Delete(Guid id, CancellationToken ct) => 
+            await store.Remove(id, ct) ? NoContent() : NotFound();
 
         [HttpPut("{id:guid}")]
-        public ActionResult<TodoItem> Update(Guid id, UpdateTodoItemRequest request)
+        public async Task<ActionResult<TodoItem>> Update(Guid id, UpdateTodoItemRequest request, CancellationToken ct)
         {
-            return store.Update(id, request.Title, request.IsCompleted) is {} updatedItem ? updatedItem : NotFound();
+            return await store.Update(id, request.Title, request.IsCompleted, ct) is {} updatedItem ? updatedItem : NotFound();
         }
     }
 }

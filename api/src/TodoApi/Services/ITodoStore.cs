@@ -3,11 +3,11 @@ namespace TodoApi.Services;
 
 public interface ITodoStore
 {
-    IReadOnlyList<TodoItem> GetAll(bool? completed=null);
-    TodoItem? Add(string title); // null when title already exists
-    bool Remove(Guid Id);
+    Task<IReadOnlyList<TodoItem>> GetAll(bool? completed, CancellationToken ct);
+    Task<TodoItem?> Add(string title, CancellationToken ct); // null when title already exists
+    Task<bool> Remove(Guid Id, CancellationToken ct);
 
-    TodoItem? Get(Guid Id);
+    Task<TodoItem?> Get(Guid Id, CancellationToken ct);
 
-    TodoItem? Update(Guid Id, string title, bool IsCompleted = false);
+    Task<TodoItem?> Update(Guid Id, string title, bool IsCompleted, CancellationToken ct);
 }
