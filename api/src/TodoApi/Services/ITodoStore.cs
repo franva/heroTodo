@@ -3,7 +3,7 @@ namespace TodoApi.Services;
 
 public interface ITodoStore
 {
-    IReadOnlyList<TodoItem> GetAll();
+    IReadOnlyList<TodoItem> GetAll(bool? completed=null);
     TodoItem Add(string title);
     bool Remove(Guid Id);
 

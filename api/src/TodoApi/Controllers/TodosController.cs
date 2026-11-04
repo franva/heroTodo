@@ -12,7 +12,7 @@ namespace TodoApi.Controllers
     {
 
         [HttpGet]
-        public IReadOnlyList<TodoItem> GetAll() => store.GetAll();
+        public IReadOnlyList<TodoItem> GetAll([FromQuery] bool? completed) => store.GetAll(completed);
 
         [HttpGet("{id:guid}")]
         public ActionResult<TodoItem?> Get(Guid id) => store.Get(id) is {} item? item : NotFound();

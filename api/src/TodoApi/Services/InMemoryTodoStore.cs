@@ -33,11 +33,11 @@ public class InMemoryTodoStore: ITodoStore
         }
     }
 
-    public IReadOnlyList<TodoItem> GetAll()
+    public IReadOnlyList<TodoItem> GetAll(bool? completed=null)
     {
         lock(_items)
         {
-            return _items.ToList();
+            return _items.Where(i => completed is null || i.IsCompleted == completed).ToList();
         }
     }
 

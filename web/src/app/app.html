@@ -55,7 +55,9 @@
   <footer>
     <span>{{remainingNum()}} left</span>
     @for(f of filters; track f) {
-      <button type="button" (click)="filter.set(f)" aria-label="Filter catogry" 
+      <!-- <button type="button" (c
+       lick)="filter.set(f)" aria-label="Filter catogry"  -->
+      <button type="button" (click)="setFilter(f)" aria-label="Filter catogry" 
         [attr.aria-pressed]="filter() === f">
         {{f}}
       </button>

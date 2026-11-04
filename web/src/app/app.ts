@@ -12,9 +12,14 @@ type Filter = 'all' | 'active' | 'completed';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('Hero Todo App');
   private readonly todoService = inject(TodoService);
-
+  private static readonly flag: Record<Filter, boolean | undefined> = {
+    all: undefined,
+    active: false,
+    completed: true
+  };
+  
+  protected readonly title = signal('Hero Todo App');
   protected readonly todos = signal<Todo[]>([]);
   protected readonly newTitle = signal('');
   protected readonly error = signal('');
@@ -27,10 +32,19 @@ export class App {
   protected readonly currentFilter = signal<Filter>('all');
   
   ngOnInit() {
-    this.todoService.getAll().subscribe({
+    this.load();
+  }
+
+  private load() {
+    this.todoService.getAll(App.flag[this.filter()]).subscribe({
       next: (todos) => this.todos.set(todos),
-      error: () => this.error.set("Database initialization failed. Check back later.")
+      error: () => this.error.set("Loading failed. Check back later.")
     });
+  }
+
+  protected setFilter(f: Filter) {
+    this.filter.set(f);
+    this.load();
   }
 
   protected add(event: Event) {

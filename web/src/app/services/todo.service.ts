@@ -8,8 +8,10 @@ export class TodoService {
     private readonly http = inject(HttpClient);
     private readonly url = "/api/todos";
 
-    getAll(): Observable<Todo[]> {
-        return this.http.get<Todo[]>(this.url);
+    getAll(completed?: boolean): Observable<Todo[]> {
+        return this.http.get<Todo[]>(this.url, {
+            params: completed === undefined ? {} : { completed }
+        });
     }
 
     add(title: string): Observable<Todo> {
