@@ -12,7 +12,8 @@
   <p class="error" role="alert">{{ error() }}</p>
   }
 
-  <section aria-label="Open Todos">
+  @if(filter() !== 'completed') {
+    <section aria-label="Open Todos">
     <h2>Open {{openTodos().length}}</h2>
     <ul>
       @for (todo of openTodos(); track todo.id) {
@@ -29,8 +30,10 @@
       }
     </ul>
   </section>
-
-  <section aria-label="Completed Todos">
+  }
+  
+  @if(filter() !== 'active') {
+    <section aria-label="Completed Todos">
     <h2>Completed {{completedTodos().length}}</h2>
     <ul>
       @for (todo of completedTodos(); track todo.id) {
@@ -47,5 +50,16 @@
       }
     </ul>
   </section>
+  }
+
+  <footer>
+    <span>{{remainingNum()}} left</span>
+    @for(f of filters; track f) {
+      <button type="button" (click)="filter.set(f)" aria-label="Filter catogry" 
+        [attr.aria-pressed]="filter() === f">
+        {{f}}
+      </button>
+    }
+  </footer>
 
 </main>

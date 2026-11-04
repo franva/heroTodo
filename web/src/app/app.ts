@@ -3,6 +3,8 @@ import { TodoService } from './services/todo.service';
 import { Todo } from './models/todo';
 import { TodoItemRow } from './components/todo-item-row/todo-item-row';
 
+type Filter = 'all' | 'active' | 'completed';
+
 @Component({
   imports: [TodoItemRow],
   selector: 'app-root',
@@ -19,6 +21,10 @@ export class App {
 
   protected readonly openTodos = computed(() => this.todos().filter(todo => !todo.isCompleted));
   protected readonly completedTodos = computed(() => this.todos().filter(todo => todo.isCompleted));
+  protected readonly remainingNum = computed(() => this.openTodos().length);
+  protected readonly filters: Filter[] = ['all' , 'active', 'completed'];
+  protected readonly filter = signal<Filter>('all');
+  protected readonly currentFilter = signal<Filter>('all');
   
   ngOnInit() {
     this.todoService.getAll().subscribe({
