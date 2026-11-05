@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddProblemDetails();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("Todo") ?? "Data Source=todos.db"));
 builder.Services.AddScoped<ITodoStore, EfTodoStore>();
@@ -19,6 +20,9 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 // app.UseHttpsRedirection();
 // app.UseAuthorization();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 app.MapControllers();
 

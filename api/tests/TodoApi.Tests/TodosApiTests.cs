@@ -6,10 +6,14 @@ using Xunit.Sdk;
 
 namespace TodoApi.Tests;
 
-public class TodosApiTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+public class TodosApiTests(WebApplicationFactory<Program> factory) : IDisposable, IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly string apiBase = "api/todos";
-    private HttpClient TestClient() => factory.WithWebHostBuilder(_ => {}).CreateClient();
+    // private HttpClient TestClient() => factory.WithWebHostBuilder(_ => {}).CreateClient();
+    private readonly TodoApiFactory _factory = new();
+    private HttpClient TestClient() => _factory.CreateClient();
+
+    public void Dispose() => _factory.Dispose();
 
     [Fact]
     public async Task Post_CreatesItem()
@@ -70,5 +74,14 @@ public class TodosApiTests(WebApplicationFactory<Program> factory) : IClassFixtu
         var fetched = await client.GetAsync(response.Headers.Location);
 
         Assert.Equal(HttpStatusCode.OK, fetched.StatusCode);
+    }
+
+    [Fact]
+    public async Task UnknownRoute_ReturnsProblemJson()
+    {
+        var response = await _factory.CreateClient().GetAsync("/nope");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }

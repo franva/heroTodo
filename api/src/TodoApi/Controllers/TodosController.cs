@@ -22,7 +22,7 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItem>> Create(CreateTodoRequest request, CancellationToken ct)
         {
-            var item = store.Add(request.Title, ct);
+            var item = await store.Add(request.Title, ct);
             if(item is null)
             {
                 return Conflict(new ProblemDetails {Title = "Duplicated todo", Status = StatusCodes.Status409Conflict});

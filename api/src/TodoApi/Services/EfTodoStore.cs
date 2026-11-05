@@ -6,13 +6,13 @@ public class EfTodoStore(TodoDbContext db) : ITodoStore
 {
     public async Task<IReadOnlyList<TodoItem>> GetAll(bool? completed, CancellationToken ct) =>
         await db.Todos.AsNoTracking()
-            .Where(i => completed == null | i.IsCompleted == completed)
+            .Where(i => completed == null || i.IsCompleted == completed)
             .OrderBy(i => i.CreatedAt).ToListAsync(ct);
 
     public async Task<TodoItem?> Add(string title, CancellationToken ct)
     {
         var trimmed = title.Trim();
-        var found = await db.Todos.FirstOrDefaultAsync(i => i.Title.ToLowerInvariant() == trimmed.ToLowerInvariant(), ct);
+        var found = await db.Todos.FirstOrDefaultAsync(i => i.Title.ToLower() == trimmed.ToLower(), ct);
         if (found != null)
         {
             return null;
